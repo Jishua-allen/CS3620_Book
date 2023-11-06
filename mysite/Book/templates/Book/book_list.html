@@ -1,0 +1,44 @@
+{% extends 'Book/base.html' %}
+{% load bootstrap_icons %}
+{% block body %}
+  <form class="d-flex flex-row justify-content-between my-2 border rounded w-25 mx-auto">
+    <input value="{{search_value}}" type="text" name="search" placeholder="Search" class="rounded w-100 border-0 p-1" style="outline: 0;">
+    <button type="submit" class=" rounded-right rounded-right border-0">{% bs_icon 'search' %}</button>
+  </form>
+  <div class="d-flex flex-row justify-content-center" style="align-items: center;">
+    {% if book_list.has_previous %}
+      <a style="height: 60px; width: 50px;" href="?page={{ book_list.previous_page_number }}&search={{search_value}}">{% bs_icon 'arrow-left-short' size='3em' %}</a>
+    {% endif %}
+    {%for book_item in book_list %}
+      <div class="card pb-3" style="width: 18rem; height: 700px;">
+        <img class="card-img-top" src="{{ book_item.image.url }}" alt="Card image cap" style="height: 300px; width: 100%;">
+        <div class="card-body">
+          <h5 class="card-title">{{ book_item.title }}</h5>
+          <div class="d-flex flex-row justify-content-between">
+            <p class="card-text">{{ book_item.category }}</p>
+            <p class="card-text">{{ book_item.rating }}/5</p>
+          </div>
+          <p class="card-text h-75" style="overflow: scroll;">{{ book_item.description }}</p>
+        </div>
+      </div>
+    {% endfor %}
+    {% if book_list.has_next %}
+      <a style="height: 60px; width: 50px;" href="?page={{ book_list.next_page_number }}&search={{search_value}}">{% bs_icon 'arrow-right-short' size='3em' %}</a>
+    {% endif %}
+  </div>
+
+  <div class="w-100 mt-4" style="text-align: center;">
+    <span class="current ">
+      {% for page in book_list.paginator.page_range %}
+        {% if page == book_list.number %}
+          <a class="p-2" style="text-decoration: none;">
+            {% bs_icon 'circle' size='1.5em'%}
+          </a>
+        {% else %}
+          <a href="?page={{ page }}&search={{search_value}}" style="text-decoration: none;" class="p-2">{% bs_icon 'circle-fill' size='1.5em'%}</a>
+        {% endif %}
+      {% endfor %}
+    </span>
+  </div>
+
+{% endblock %}
